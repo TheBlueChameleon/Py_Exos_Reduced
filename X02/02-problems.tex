@@ -1,0 +1,68 @@
+\documentclass[
+	english,
+	fontsize=10pt,
+	parskip=half,
+	titlepage=true,
+	DIV=12
+]{scrartcl}
+
+\usepackage[utf8]{inputenc}
+\usepackage{babel}
+\usepackage[T1]	{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{color}
+\usepackage{csquotes}
+
+\usepackage{hyperref}
+
+\newcommand*{\tabcrlf}{\\ \hline}
+
+\usepackage{minted}
+	\usemintedstyle{friendly}
+
+\newcommand*{\inPy}[1]{\mintinline{python}{#1}}
+\newcommand*{\ie}{i.\,e. }
+\newcommand*{\eg}{e.\,g. }
+
+\begin{document}
+
+\part*{Python Problems 02, Spring 2021}
+
+\section{Reading Numbers (1 P)}
+Use the command \inPy{input} to read data from the keyboard. Store this \emph{as a number}, and output the twofold of this number on screen.
+
+\section{Formatted Output (1 P)}
+Compute the value $^{22}/_{7}$, and print it on the screen such that only three decimal places are displayed (\ie the output should be \texttt{3.143})\footnote{Since this faction is very close to $\pi$, it is often used as an approximation to $\pi$, especially in engineering context. Some even celebrate July 22 as \emph{alternative pi day}, next to March 14 of course.}.
+
+\section{Solution to an equation (1 P)}
+Think of a simple equation (\eg $x^2 - 49 = 0$). 
+Write a program that asks the user for a value $x$. Your code should determine whether or not the user input is a solution to the equation you thought of. Accordingly, it should either output \texttt{Your input is a solution to x\textasciicircum 2 - 49 = 0} or \texttt{Your input is no solution to x\textasciicircum 2 - 49 = 0}.
+
+Your code is \emph{not} supposed to ask for the equation itself, only for the \emph{value for $x$}.
+
+\section{Leap Years (2 P)}
+As you know, the time it takes for earth to go around the sun does not exactly match our calendar. To compensate for this, we find leap days in regular intervalls. They are iserted according to the following rules:
+
+\begin{itemize}
+  \item If the year is divisible by 4, the year is a leap year. This holds unless...
+  \item If the year is divisible by 100, the year is \emph{not} a leap year. But there is an exception to the exception:
+  \item If the year is divisible by 400, the year \emph{is} a leap year.
+\end{itemize}
+Create a program that asks for a year to test, and that outputs whether or not it is a leap year.
+
+\emph{Hint:} You can solve this either using nested \inPy{if..else} blocks, or with logical operators such as \inPy{and} or \inPy{or}.
+
+\emph{Optionally:} try both variants.
+
+\emph{Hint:} Save some time by omitting the user input using \inPy{input}. Instead, test the logic of your \inPy{if} blocks with a fixed value such as 
+\inPy{year = 2020}, and only change this line to test different scenarios.
+
+\section{Quadratic Equation (1 P)}
+Read three values \inPy{a, b, c} from the keyboard. Find the roots of the parabola $ax^2 + bx +c$. Also think of what should happen if the user inputs nonsense ($\rightarrow$ divisions by zero?). Write a version of your code that only allows for real-valued input and a version that also covers complex solutions.
+
+Reminder: You can find the root of a parabola (in both, the real and the complex case) with the equation:
+\[ x_{1,2} = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} \]
+
+\end{document}
+

@@ -1,0 +1,134 @@
+\documentclass[
+	english,
+	fontsize=10pt,
+	parskip=half,
+	titlepage=true,
+	DIV=12
+]{scrartcl}
+
+\usepackage[utf8]{inputenc}
+\usepackage{babel}
+\usepackage[T1]	{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{color}
+\usepackage{csquotes}
+
+\usepackage{hyperref}
+
+\newcommand*{\tabcrlf}{\\ \hline}
+
+\usepackage{minted}
+	\usemintedstyle{friendly}
+
+\newcommand*{\inPy}[1]{\mintinline{python}{#1}}
+\newcommand*{\ie}{i.\,e. }
+\newcommand*{\eg}{e.\,g. }
+
+\begin{document}
+
+\part*{Python Problems 01, Spring 2021}
+
+\section{Setup and Testing of the Working Environment (1 P)}
+Make sure you have correctly installed your Python interpreter and that you have an apt editor.
+
+\textbf{For Windows-Users}:\\
+If not done already, follow the steps up to section 1.4 in the tutorial you can find on GRIPS. If you have any questions, don't hesitate to ask your tutor.
+
+\textbf{For Linux-Users}:\\
+A Python interpreter should be installed by default installed. Open a terminal and enter
+\begin{center}
+	\texttt{python3}
+\end{center}
+If you get an error message, install the package \texttt{python3}. To do so, enter in the terminal window:
+\begin{center}
+	\texttt{sudo apt install software-properties-common}\\
+	\texttt{sudo add-apt-repository ppa:deadsnakes/ppa}\\
+	\texttt{sudo apt update}\\
+	\texttt{sudo apt install python3}
+\end{center}
+
+Follow the instructions on \url{https://docs.python-guide.org/starting/install3/linux/}
+
+Once you are able to start an interpreter session, type the following line:
+\begin{center}
+	\texttt{print("Hello World!")}
+\end{center}
+If the \enquote{reply} \texttt{Hello World!} appears on the screen, your interpreter works as intendet.
+
+End the Python interpreter session. To do so, type \texttt{quit()}. Now download the file  \texttt{Install-Test-py.py} from GRIPS. Navigate to the directory where you saved the file ($\rightarrow$ \texttt{cd}), then enter:
+\begin{center}
+	\texttt{python3 Install-Test-py.py}
+\end{center}
+
+If this triggers an error message, perform the following steps:
+\begin{itemize}
+\item Install the Python package manager pip. For this, enter in the terminal:\\
+	\texttt{sudo apt install python3-pip}
+\item Install the packages numpy, scipy, matplotlib und pandas. For this, type into the terminal:\\
+	\texttt{python -m pip install --user numpy scipy matplotlib pandas}
+\end{itemize}
+This may take several minutes to complete.
+
+If everything works fine, running \texttt{Install-Test-py.py} prints multiple success messages in the terminal and opens a window showing a sine curve.
+
+You can now start to work the exercise sheets. For your convenience, I recommend installing the code editor spyder. You can do so using the usual package sources. Type into the terminal:
+\begin{center}
+\texttt{sudo apt install spyder}
+\end{center}
+
+If you don't want to use Spyder, good alternative/lightweight editors are kate, geany or gedit.
+
+\textbf{For Mac-Users:}\\
+Sorry, I have no Mac and cannot test... but following the Tutorial for Windows Users seems to work well. Ask your tutor if you have any questions.
+
+
+\section{Data types (1 P)}
+Interpret the following code:
+\begin{minted}[linenos]{python}
+i = 2
+f = 2.0
+s = "2"
+
+print(i + i)
+print(i + f)
+print(i * s)
+
+#print(f * s)
+\end{minted}
+
+Which data type is associated with the expression \inPy{i + i}?\\
+Which data type is associated with the expression \inPy{i + f}?\\
+Which data type is associated with the expression \inPy{i * s}?\\
+Why would \inPy{print(f * s)} trigger an error message?
+
+\section{Complex Numbers (1 P)}
+Create a variable \texttt{var} that stores the imaginary unit $i$. Convince yourself that Python evaluates $i^2$ as $-1$. What is the meaning of \texttt{var.real} and \texttt{var.imag}? Test with other complex numbers to confirm your assumption.
+
+\section{Strings (1 P)}
+Create a variable storing the following string:
+\begin{center}
+	\emph{"That's a pity", she said.}
+\end{center}
+
+Test this by printing the variable's content with \inPy{print}.
+%s = '"That' + "'s a pity" +'", she said.'
+
+\section{Table (2 P)}
+Imagine you are working with a table of width $w$ and height $h$. The cells in this table are enumerated beginning with 0. So, for $w = 3, h = 4$ you would get these cell IDs:
+\begin{center}
+\begin{tabular}{|c|c|c|}
+	\hline
+	 0 &  1 &  2 \tabcrlf 
+	 3 &  4 &  5 \tabcrlf
+	 6 &  7 &  8 \tabcrlf
+	 9 & 10 & 11 \tabcrlf
+\end{tabular}
+\end{center}
+
+Write a program that computes the number of row and column when given a cell ID, and prints it on screen. Use a variable \texttt{cellID} in which you prepare the cell ID.
+
+Example: If \inPy{cellID = 5} holds, your code should output \texttt{row 2, column 3}.
+
+\end{document}
+
