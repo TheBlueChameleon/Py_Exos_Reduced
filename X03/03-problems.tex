@@ -1,0 +1,149 @@
+\documentclass[
+	ngerman,
+	fontsize=10pt,
+	parskip=half,
+	titlepage=true,
+	DIV=12
+]{scrartcl}
+
+\usepackage[utf8]{inputenc}
+\usepackage{babel}
+\usepackage[T1]	{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{color}
+\usepackage{csquotes}
+
+\usepackage{hyperref}
+
+\newcommand*{\tabcrlf}{\\ \hline}
+
+\usepackage{amsmath}
+
+\usepackage{minted}
+	\usemintedstyle{friendly}
+
+\newcommand*{\inPy}[1]{\mintinline{python}{#1}}
+
+\newcommand*{\ie}{i.\,e. }
+\newcommand*{\eg}{e.\,g. }
+	
+\begin{document}
+
+\part*{Python Problems 03, Winter 2021}
+\section{Exploring Modules and Classes (1 P)}
+With \inPy{help} you can show a brief description of a command/method/... Type \texttt{help(command)} into the interpreter section of your IDE to see an explanation of how to use the \texttt{command}. For example, \inPy{help(print)} will show you:
+
+\begin{minted}{text}
+Help on built-in function print in module builtins:
+
+print(...)
+    print(value, ..., sep=' ', end='\n', file=sys.stdout, flush=False)
+    
+    Prints the values to a stream, or to sys.stdout by default.
+    Optional keyword arguments:
+    file:  a file-like object (stream); defaults to the current sys.stdout.
+    sep:   string inserted between values, default a space.
+    end:   string appended after the last value, default a newline.
+    flush: whether to forcibly flush the stream.
+\end{minted}
+
+The command \inPy{dir} lists the methods that can be used with an object. For example, you can type \inPy{dir(int)} into the interpreter section of your IDE to see a list of all methods that can be applied to an \inPy{int}.
+
+
+Start from the following code:
+\begin{minted}[linenos]{python}
+import math
+
+myList = ["Dusky", "Joe", "Hartington"]
+
+print("### ELEMENTS IN MODULE MATH:")
+print(dir(math))
+print()
+
+print("### ELEMENTS IN CLASS LIST:")
+print(dir(myList))
+\end{minted}
+
+Using \inPy{help}, try to find out what \inPy{math.factorial}, \inPy{math.radians}, \inPy{myList.index}, \inPy{myList.pop} and \inPy{myList.clear} are good for. Expand on the above code to validate your assumptions.
+
+
+\section{Substrings (1 P)}
+Start from the string variable:
+\mint{python}{stringVar = "My Hovercraft is full of eels"}
+From this, create a string that contains only every second character of \texttt{stringVar}, beginning with the second character.
+
+Create a new \inPy{list} variable where each list entry is one word in \texttt{stringVar}.
+
+\emph{Hint}: Loop up \texttt{help(str.split)}.
+
+
+\section{Matrix (1 P)}
+Create \emph{one single variable} \inPy{matrix} that contains the following information:
+\begin{equation*}
+	\texttt{matrix} = \begin{pmatrix}
+		1 & 2 & 3 \\
+		4 & 5 & 6 \\
+		7 & 8 & 9
+	\end{pmatrix}
+\end{equation*}
+
+Use exactly three \inPy{print} commands to put a representation of this matrix on screen!
+
+How can you change a single number in the matrix?
+
+\section{Telefone book (1 P)}
+Create \emph{one single list} that holds name, age and height of different people, \eg :
+\begin{center}
+	\begin{tabular}{ccc}
+	Peter  & 19 & 1.80 \\
+	Jasmin & 20 & 1.65 \\
+	Alex   & 22 & 1.93
+	\end{tabular}
+\end{center}
+
+Apply the method \inPy{sort} on this list. Given your current knowledge: how can you make Python sort the list according to another criterion (\eg sort by age)?
+
+\section{Alternating List (1 P)}
+Create the following output on screen:
+
+\begin{minted}{text}
+['a', 'b', 'a', 'b', 'a', 'b', 'a', 'b', 'a', 'b', 'a', 'b', 'a', 'b', 'a', 'b', 'a', 'b']
+\end{minted}
+
+The code creating this output should be shorter than the text generated.
+
+\emph{Hint:} There are exactly 9 \texttt{a}s and \texttt{b}s.
+
+
+\section{Erroneous Matrix Access (1 P)}
+Regard the following code:
+
+\begin{minted}[linenos]{python}
+A = [ [1,2,3] ] * 3
+print(A)
+A[0][2] = 5
+print(A)
+\end{minted}
+
+This creates a $3 \times 3$ matrix. Why does line 3 of this code alter more than one matrix element?
+
+
+\section*{Optional Bonus Problem: Nesting (3 P)}
+Explain the behaviour of the following code:
+
+\begin{minted}[linenos]{python}
+A = []
+A.append(A)
+
+print(A)
+print(len(A))
+print(len(A[0]))
+print(len(A[0][0]))
+
+A[0][0] = 1
+print(A)
+\end{minted}
+
+What would be the memory model of this list?
+\end{document}
