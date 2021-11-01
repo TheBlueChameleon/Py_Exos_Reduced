@@ -1,0 +1,110 @@
+\documentclass[
+	ngerman,
+	fontsize=10pt,
+	parskip=half,
+	titlepage=true,
+	DIV=12
+]{scrartcl}
+
+\usepackage[utf8]{inputenc}
+\usepackage{babel}
+\usepackage[T1]	{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{color}
+\usepackage{csquotes}
+
+\usepackage{hyperref}
+
+\newcommand*{\tabcrlf}{\\ \hline}
+
+\usepackage{amsmath}
+
+\usepackage{minted}
+	\usemintedstyle{friendly}
+
+\newcommand*{\inPy}[1]{\mintinline{python3}{#1}}
+\newcommand*{\ie}{i.\;e. }
+\newcommand*{\eg}{e.\;g. }
+
+\newcommand{\thus}{\ensuremath{\rightarrow}}
+
+	
+\begin{document}
+
+\part*{Python Problems 07, Winter 2021/22}
+
+\section{Chain Generator (1 P)}
+Write a function  \texttt{chainGenerator} that takes an arbitrary number of arguments. The function should return a string that comprises of these elements, separated by a freely chooseable string \texttt{sep}. If no such string is indicated, by default a hypen (\texttt{-}) should be used. Your programm should work like this:
+\begin{minted}{python}
+print( chainGenerator(1, 2, 3) )                  # output: 1-2-3
+print( chainGenerator(1, 2, 3, 4, sep="~~~") )    # output: 1~~~2~~~3~~~4
+\end{minted}
+
+\emph{Hint: You may need \inPy{str} to convert numbers to strings.}
+
+
+\section{Sort by vector length (1 P)}
+Let there be a list of vectors:
+\mint{python}{data = [(7, 3), (5, 5), (8, 2), (9, 1), (6, 4)]}
+
+Sort this list by length of the vectors.
+
+\emph{Hint}:\\
+A vector $(x, y)$ has length $\sqrt{x^2 + y^2}$. You can solve this problem with a single line of code.
+
+
+\section{Binary Search (2 P)}
+Write a \emph{recursive} function that searches a \emph{sorted} list, and tells whether or not a given element is in the list (\ie it should return either \inPy{True} or \inPy{False}). In other words, your function should emulate the behaviour of the \inPy{in} operator:
+\begin{minted}{python}
+data = [1, 5, 6, 7, 8, 42, 96, 666, 1337, 2112]
+searchTerm = 42
+result = searchTerm in data
+\end{minted}
+
+An \emph{iterative} solution could look like this:
+\begin{minted}{python}
+data = [1, 5, 6, 7, 8, 42, 96, 1337, 2112]
+searchTerm = 42
+
+def iterativeSearch(searchterm, data) :
+    for element in data :
+        if element == searchTerm :
+            return True
+    else :
+        return False
+
+result = iterativeSearch(searchTerm, data)
+\end{minted}
+
+We now want to make use of the fact that we are given a \emph{sorted} list. With this, we can implement an algorithm that works much faster. We consider the following:
+\begin{itemize}
+\item We can compare \texttt{searchTerm} with the element \emph{in the middle of our list} \texttt{data}.
+\item If the mid element is \emph{smaller} than \texttt{searchTerm}, it is sufficient to search the \emph{second half} of the list
+\item Otherwise, it is sufficient to search the \emph{first half} of the list
+\item It is trivial to decide whether or not \texttt{searchTerm} is in a list with only one element.
+\item If we have a non-trivial case, we can recursively apply our first thoughts to analyze sub-lists.
+\end{itemize}
+
+Now write a function that follows this train of thought to find out whether or not \texttt{searchTerme} is in a list \texttt{data}.
+
+How many comparisons does this algorithm need on average when searching a list of length $N$? How many comparisons does \texttt{iterativeSearch} need on average?
+
+
+\section{Matchmaking (2 P)}
+Create a list \texttt{socks} which contains numbers. Each number should be \emph{exactly twice} in your list, but at a random position. For example, your list may look like this:
+\mint{python}{socks = [0, 2, 0, 1, 1, 2]}
+
+Now create a new list \texttt{matches}, that stores for each element in \texttt{socks}, where its counterpart can be found, \ie at which index the same number can be found again. For the example shown above, \texttt{matches} should look like this:
+\mint{python}{matches = [2, 5, 0, 4, 3, 1]}
+
+\emph{Hint:}\\
+To create \texttt{socks}, look up \texttt{random.shuffle}. Obviously, you will need \inPy{import random}.\\
+Type \inPy{help(random.shuffle)} to find out how this function works.
+
+\emph{Background Information}:\\
+This task was conceived when doing my laundry. I discussed various methods of optimizing the process with my fellow lodger, who then wanted to implement it himself. Later on, I nerd-sniped\footnote{\url{https://xkcd.com/356/}} others with this, ending in Nils Meyer (one of my former tutors) coming up with the QuickSock-Algorithm, which you can find on GRIPS later on. QuickSock is a variant of \emph{QuickSort}\footnote{\url{https://en.wikipedia.org/wiki/Quicksort}}, a sorting algorithm discussed in the lecture \emph{Algorithmen und Datenstrukturen} each summer term.
+
+Python's own sorting algorithm is called \emph{TimSort} and is based upon QuickSort. and \emph{Mergesort}\footnote{\url{https://en.wikipedia.org/wiki/Merge_sort}}.
+
+\end{document}

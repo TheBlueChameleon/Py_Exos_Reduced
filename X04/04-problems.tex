@@ -1,0 +1,127 @@
+\documentclass[
+	ngerman,
+	fontsize=10pt,
+	parskip=half,
+	titlepage=true,
+	DIV=12
+]{scrartcl}
+
+\usepackage[utf8]{inputenc}
+\usepackage{babel}
+\usepackage[T1]	{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{color}
+\usepackage{csquotes}
+
+\usepackage{hyperref}
+
+\newcommand*{\tabcrlf}{\\ \hline}
+
+\usepackage{amsmath}
+
+\usepackage{minted}
+	\usemintedstyle{friendly}
+
+\newcommand*{\inPy}[1]{\mintinline{python}{#1}}
+
+\newcommand*{\ie}{i.\,e. }
+\newcommand*{\eg}{e.\,g. }
+	
+\begin{document}
+
+\part*{Python Problems 04, Winter 2021/22}
+\section{Dot Product (1\;P)}
+Compute the dot product of two vectors $\vec{a} \cdot \vec{b}$ by expanding on the following code.
+
+Reminder: the dot product is defined as:
+\begin{align*}
+	\vec{a} \cdot \vec{b} &= \sum_{j} a_j \cdot b_j
+\end{align*}
+That is, you multiply component-wise and sum up the products.
+
+Start from this code:
+\begin{minted}{python}
+vector_a = [ 3, 2, 1, 5, 7, 2, -1]
+vector_b = [-7, 3, 7, 5, 6, 8,  1]
+
+# Your code here
+
+print(dotProduct)
+\end{minted}
+
+In other words: comute $3 \cdot (-7) + 2 \cdot 3 + 1 \cdot 7 + \ldots$
+
+\emph{Hint:} The result is 74.
+
+\textbf{If you don't know the sum notation ($\sum$):}\\
+This is a short notation for sums with many summands. Instead of listing every single one, only a \emph{generic form} with a \emph{summation index} is written. This summation index is a sequential number, identifying each summand.
+
+Example:
+\[\sum_{i=1}^4 i = 1 + 2 + 3 + 4 = 10 \]
+The summation index here is $i$. It is always written underneath the \emph{summation symbol} $\sum$. Usually, below and above the $\sum$, there are also the \emph{lower and upper summation boundary}, \ie here $1$ and $4$. Behind the summation symbol there's an expression that describes all summands. The values $1 ... 4$ are plugged in for $i$ in sequence, thus forming all summands.
+
+The summand can, of course, be more than a single number. In fact, it can be an arbitrary expression. Often, summands are \emph{elements of a list}. The sum of all elements in a list $a$ with four elements can thus be written as:
+\[ \sum_{i=1}^4 a_i = a_1 + a_2 + a_3 + a_4 \]
+
+Often, the lower and upper summation boundary are omitted. If this is done, it is implied to sum \emph{over all reasonable values of the summation index}. In the case of lists, this means to sum over all list elements.
+
+
+\section{Counting Characters (3\;P)}
+Create a string variable and put some text in it. Determine, how often each character appears in the string.
+
+\emph{Example:}\\
+The String \texttt{this is an ex-parrot} contains:
+\begin{center}
+\begin{tabular}{cc|cc}
+(whitespace) & 3x & o            & 1x \\
+-            & 1x & p            & 1x \\
+a            & 2x & r            & 2x \\
+e            & 1x & s            & 2x \\
+h            & 1x & t            & 2x \\
+i            & 2x & x            & 1x \\
+n            & 1x 
+\end{tabular}
+\end{center}
+
+\emph{Hint}: Use a \inPy{set} and a \inPy{dict}.
+
+
+\section{Christmas Tree (2\;P)}
+Print the following \enquote{Christmas tree} by putting the required number of whitespaces and asterisks on the screen:
+\begin{minted}{text}
+      *
+     ***
+    *****
+   *******
+  *********
+ ***********
+*************
+\end{minted}
+
+Writing seven \inPy{print} commands will not be counted as a solution. Instead, solve this problem with \inPy{for} loops. Keep your solution flexible by making it dependent on a single variable:
+\mintinline{python}{height = 7}
+
+
+\section{Probability (3\;P)}
+Use Python to find an \emph{approximate} solution for the following question:
+\begin{center}
+	\emph{You break a rod into three pieces of arbitrary length. How big is the probability that from these three pieces a triangle can be formed?}
+\end{center}
+
+For this, follow these instructions:
+\begin{itemize}
+\item If you do an experiment $N$ times, and a certain outcome occurs $n$ times, then (for big $N$) $\frac{n}{N}$ is a reasonable approximation for the probability of
+	the outcome.
+\item Determine three random values $a, b, c$ that sum up to a fixed given lenght (\eg $a+b+c=1$). To do so, use these lines:
+	\begin{minted}{python}
+	import random
+	
+	lower = 0
+	upper = 1
+	print(random.uniform(lower, upper))
+	\end{minted}
+\item Now find out, if it is possible to form a triangle with sides $a, b, c$.
+\item Repeat this process in a \inPy{for} loop many times over (at least $N=1000$ times). Count how often it was possible to form a triangle ($\rightarrow n$).
+\end{itemize}
+\end{document}

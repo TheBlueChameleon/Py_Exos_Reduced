@@ -1,5 +1,5 @@
 # ============================================================================ #
-# Problem 6
+# Problem 1
 
 vector_a = [ 3, 2, 1, 5, 7, 2, -1]
 vector_b = [-7, 3, 7, 5, 6, 8,  1]
@@ -17,7 +17,7 @@ for x, y in zip(vector_a, vector_b) :
 print(result)
 
 # ============================================================================ #
-# Problem 7
+# Problem 2
 
 text = "the quick brown fox jumps over the lazy dog"
 uniqueChars = set(text)
@@ -42,7 +42,7 @@ for char in sortedChars :
   print(char, "appears", counts[char], "times; automatic count yields:", autoCounts[char])
 
 # ============================================================================ #
-# Problem 8
+# Problem 3
 
 # ---------------------------------------------------------------------------- #
 # Approach 1
@@ -87,7 +87,7 @@ for i in range(height * width) :
     if (col == width - 1) : print("")
 
 # ---------------------------------------------------------------------------- #
-# Approach 5
+# Approach 4
 
 formatstring = "{" + f":^{2 * height + 1}" + "}"
 
@@ -98,7 +98,7 @@ for n in range(height) :
     print( formatstring.format(stars) )
 
 # ============================================================================ #
-# Problem 9
+# Problem 4
 
 # Depending on the chosen approach you'll find two (possibly even more...)
 # different yet *correct* results. There are multiple ways to break a rod that
