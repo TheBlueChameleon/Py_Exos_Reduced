@@ -1,0 +1,86 @@
+[
+    {
+        "name" : "Coding",
+        "type" : "folder",
+        "content" :
+            [
+                {
+                    "name" : "Python",
+                    "type" : "folder",
+                    "content" :
+                        [
+                            {
+                                "name" : "Python 3 Reference",
+                                "type" : "bookmark",
+                                "url"  : "https://docs.python.org/3/"
+                            },
+                            {
+                                "name" : "Realpython Tutorials",
+                                "type" : "bookmark",
+                                "url"  : "https://realpython.com/"
+                            }
+                        ]
+                },
+                {
+                    "name" : "C/C++",
+                    "type" : "folder",
+                    "content" :
+                        [
+                            {
+                                "name" : "CPP Reference",
+                                "type" : "bookmark",
+                                "url"  : "http://en.cppreference.com/w/"
+                            },
+                            {
+                                "name" : "Qt5 - Modules",
+                                "type" : "bookmark",
+                                "url"  : "http://doc.qt.io/qt-5/qtmodules.html"
+                            },
+                            {
+                                "name" : "Qt5 - Classes",
+                                "type" : "bookmark",
+                                "url"  : "https://doc.qt.io/qt-5/classes.html"
+                            }
+                        ]
+                }
+        ]
+    },
+    {
+        "name" : "Uni",
+        "type" : "folder",
+        "content" :
+            [
+                {
+                    "name" : "Physik - Links für Studierende",
+                    "type" : "bookmark",
+                    "url"  : "https://www.ur.de/physik/fakultaet/studium/links-fuer-studierende/index.html"
+                },
+                {
+                    "name" : "Fachschaft M/PHY",
+                    "type" : "bookmark",
+                    "url"  : "https://www-app.uni-regensburg.de/Studentisches/FS_MathePhysik/cmsms/"
+                },
+                {
+                    "name" : "Infrastructure",
+                    "type" : "folder",
+                    "content" : [
+                        {
+                            "name" : "GRIPS",
+                            "type" : "bookmark",
+                            "url"  : "https://elearning.uni-regensburg.de/login/index.php"
+                        },
+                        {
+                            "name" : "FlexNow",
+                            "type" : "bookmark",
+                            "url"  : "https://fn2.uni-regensburg.de/FN2AUTH/login.jsp"
+                        },
+                        {
+                            "name" : "SPUR",
+                            "type" : "bookmark",
+                            "url"  : "https://studierendenportal.uni-regensburg.de/"
+                        }
+                    ]
+                }
+            ]
+    }
+]

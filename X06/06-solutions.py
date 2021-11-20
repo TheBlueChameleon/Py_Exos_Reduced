@@ -46,27 +46,21 @@ print()
 # ============================================================================ #
 # problem 3
 
-print("ERATOSTHENES PRIME SIEVE")
+print("### INTEGRAL (I)")
 
-def getPrimesUpTo(N) :
-    data = [i for i in range(2, N+1)]
+import math
 
-    for i in data :
-        if i == 0 : continue
+def integrate(func, start, stop, N) :
+  result = 0
+  width  = (stop - start) / N
 
-        for j in range(i+i, N+1, i) :
-            data[j-2] = 0
+  for i in range(N) :
+    x = start + i * width
+    result += func(x) * width
 
-    data = [n for n in data if n != 0]
-    return data
+  return result
 
-data = getPrimesUpTo(10000)
-for i in data :
-    print(i, end=", ")
-
-print("...")
-
-print()
+print( integrate(math.exp, 0, 1, 10000) )
 
 
 # ============================================================================ #

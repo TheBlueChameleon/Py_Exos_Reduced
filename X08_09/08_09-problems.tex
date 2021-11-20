@@ -40,7 +40,7 @@
 \part*{Python Problems 08/09, Winter 2021/22}
 In this problem paper, we'll try to work on one bigger, contiguous problem. We will recreate the basis for a turn based adventure game\footnote{More precisely, we will recreate the core gameplay of \emph{Fortune and Glory}, a wonderfully nerdy game inspired by the adventures of \emph{Indiana Jones} and the pulp fiction of the 60s and 70s.}. Several players have come to the jungle to find a long forgotten temple and extract the treasure hidden within. On their way, they have to pass perils and they will find useful items that help them come closer to their goal. If a player passes a test, they gain a new item; if they fail to do so, they loose health.
 
-The scope is a bit bigger than usual, so you \textbf{have two weeks time for this exercise} (i.e. you only need to be done by course week 9). 
+The scope is a bit bigger than usual, so for this exercise, you \textbf{have time until after christmas} (i.e. you only need to be done by 2022-01-07). 
 
 The following tasks will guide you step by step to realizing this game concept. Don't worry by the length of the problem paper -- the tasks themselves are actually rather simple ;)
 
@@ -84,7 +84,7 @@ A player has a name, a health-value, a strength-value, an intelligence-value, a 
 
 We will, again, create a class \texttt{Player} that stores all of these data per player. This time, however, health, strength, intelligence, speed and charisma of a player shall be subject to randomness: All of these values shall be within a range \texttt{basevalue\_X $\pm$ variation\_X} (where \texttt{X} is one of the characteristics, \eg strength). Convince yourself that it is prudent to store \texttt{basevalue\_health}, \texttt{basevalue\_strength}, ... as \emph{class attributes} while the values actually describing the player should be \emph{instance attributes}.
 
-Now write the methods \inPy{__init__} and \inPy{__str__} for your class \texttt{Player}. For reasons we'll see later, it is best to put the characteristics in a instance variable of type \inPy{dict} instead of using several instance variables. Make sure that the values for the characteristics are all of type \inPy{int}.
+Now write the methods \inPy{__init__} and \inPy{__str__} for your class \texttt{Player}. For reasons we'll see later, it is best to put the characteristics in a instance attribute of type \inPy{dict} instead of using several instance attributes. This dict will store the values of the characteristics (health, strength, ...) as \inPy{int}s. Still, the backpack and the progress-meter should be instance attributes in their own right, not part of the \inPy{dict}.
 
 You may expand on the following code:
 \begin{minted}[linenos]{python3}

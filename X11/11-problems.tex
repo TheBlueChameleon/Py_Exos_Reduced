@@ -1,0 +1,126 @@
+\documentclass[
+	ngerman,
+	fontsize=10pt,
+	parskip=half,
+	titlepage=true,
+	DIV=12
+]{scrartcl}
+
+\usepackage[utf8]{inputenc}
+\usepackage{babel}
+\usepackage[T1]	{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{color}
+\usepackage{csquotes}
+
+\usepackage{hyperref}
+
+
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage[bf]{caption}
+	\captionsetup{format=plain}
+
+\newcommand*{\tabcrlf}{\\ \hline}
+
+\usepackage{amsmath}
+
+\usepackage{minted}
+	\usemintedstyle{friendly}
+
+\newcommand*{\inPy}[1]{\mintinline{python3}{#1}}
+\newcommand*{\ie}{i.\;e. }
+\newcommand*{\eg}{e.\;g. }
+
+\newcommand{\thus}{\ensuremath{\rightarrow}}
+
+	
+\begin{document}
+
+\part*{Python Problems 11, Winter 2021/22}
+\section{Blog Database (2\;P)}
+On GRIPS, you'll find the file \texttt{11-base.py}, which contains this code:
+\begin{minted}[linenos]{python3}
+def submit_post (ID, blog, **kwargs) :
+    pass
+
+blog_posts = [
+    {'ID' : 'af853d12', 'Photos': 3, 'Likes': 21, 'Comments': 2},
+    {'ID' : 'af853e09', 'Likes': 13, 'Comments': 2, 'Shares': 1},
+    {'ID' : 'af853e22', 'Photos': 5, 'Likes': 33, 'Comments': 8, 'Shares': 3},
+    {'ID' : 'af853f00', 'Comments': 4, 'Shares': 2},
+    {'ID' : 'af853fa3', 'Photos': 8, 'Comments': 1, 'Shares': 1},
+    {'ID' : 'af85402b', 'Photos': 3, 'Likes': 19, 'Comments': 3}
+]
+
+total_likes = 0
+
+for post in blog_posts:
+    total_likes = total_likes + post['Likes']
+
+print(f"Total likes: {total_likes}")
+
+submit_post('af85402b', blog_posts,
+            Title = 'Yoda was wrong: There is a try!')
+submit_post('af85402c', blog_posts,
+            Title = 'Dr. Pythonlove Or: How I Learned to Stop Worrying and Love the Exception')
+
+print(blog_posts)
+\end{minted}
+
+As you can see, the code will fail to run. Insert a \inPy{try .. except} block that catches the blog posts where no \texttt{Likes} information is available. The block should automatically add the entry \inPy{'Likes' : 0} to the corresponding entry in \texttt{blog\_posts}.
+
+Then, flesh out the function \texttt{submit\_post}. It should append a blog (given by the \texttt{kwargs}) to the list \texttt{blog}, but only if the ID was not used before. If the ID is already in the \texttt{blog}, a user defined \texttt{DuplicatePostError} should be raised.
+
+That means, in the above example, lines 20 and 21 should raise a \texttt{DuplicatePostError}. Lines 22 and 23 should have the effect of adding the entry
+\begin{minted}{python3}
+{'ID': 'af85402c',
+ 'Title': 'Dr. Pythonlove Or: How I Learned to Stop Worrying and Love the Exception'}
+\end{minted}
+to the list \texttt{blog\_posts}.
+
+
+\section{Non-Abortable Code (1\;P)}
+On GRIPS, you'll find the file \texttt{11-base.py}, which contains this code:
+\begin{minted}[linenos]{python3}
+import time
+
+print("Press CTRL + C to prevent waiting very long:")
+
+for x in range(1000) :
+    try :
+        time.sleep(.01)
+    except :
+        print("\nNope, I fooled you!")
+\end{minted}
+
+If you run the code and try to abort it by pressing \texttt{CTRL + C}, only the line \texttt{Nope, I fooled you} will appear and you have to wait the full ten seconds for the code to finish.
+
+Why is that so? What would you need to change to restore the capacity to abort the code execution?
+
+
+\section{N-Fold Concatenation (2\;P)}
+Write a function \texttt{concatenateNFold} that computes the value of a function $f$ after n-fold concatenation. That is, the result of 
+\texttt{concatenateNFold(f, 3, x)}
+should be $f(f(f(x)))$.
+
+\emph{Hint}:\\
+Test your code with $f(x) = x + 1$ and $x = 0$. If your code is correct, then the output for \texttt{concatenateNFold(f, N, 0)} should be $N$.
+
+
+\section{Matchmaking (2+4\;P)}
+Create a list \texttt{socks} which contains numbers. Each number should be \emph{exactly twice} in your list, but at a random position. For example, your list may look like this:
+\mint{python}{socks = [0, 2, 0, 1, 1, 2]}
+
+Now create a new list \texttt{matches}, that stores for each element in \texttt{socks}, where its counterpart can be found, \ie at which index the same number can be found again. For the example shown above, \texttt{matches} should look like this:
+\mint{python}{matches = [2, 5, 0, 4, 3, 1]}
+
+\emph{Hint:}\\
+To create \texttt{socks}, look up \texttt{help(random.shuffle)}. Obviously, you will need \inPy{import random}.
+
+\emph{Background Information / Bonus task}:\\
+This task was conceived when sorting socks in the laundry. I discussed various methods of optimizing the process with my fellow lodger, who then wanted to implement it himself. Later on, I nerd-sniped\footnote{\url{https://xkcd.com/356/}} others with this, ending in Nils Meyer (one of my then tutors) coming up with the QuickSock-Algorithm, which you can find on GRIPS later on. QuickSock is a variant of \emph{QuickSort}\footnote{\url{https://en.wikipedia.org/wiki/Quicksort}}, a sorting algorithm discussed in the lecture \emph{Algorithmen und Datenstrukturen} each summer term.
+
+Python's own sorting algorithm is called \emph{TimSort} and is based upon QuickSort. and \emph{Mergesort}\footnote{\url{https://en.wikipedia.org/wiki/Merge_sort}}. A \emph{Mergesort-like} recursive approach can be found in the solutions on GRIPS. You can attempt such a recursive approach for the bonus points, too.
+\end{document}

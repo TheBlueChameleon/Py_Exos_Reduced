@@ -60,7 +60,7 @@ print(y)
 \includegraphics[width=\linewidth]{MCarlo}
 \caption{\url{https://commons.wikimedia.org/wiki/File:Pi_statistisch.png}}
 \label{fig:MCPI}
-\vspace{-50pt}
+\vspace{-40pt}
 \end{wrapfigure}
 %
 Write a function that returns an approximation to the value of $\pi$. To do so, follow these instructions:
@@ -90,15 +90,29 @@ Plugging in $R^2 = 1$ and acounting for the factor 4 (we're only covering a quad
 \emph{Background Information}:\\
 Monte Carlo Methods are a collection of techniques often used where accuracy has to be sacrificed for computation time. Albeit not terribly precise, they often are the only means of evaluating some integrals. We'll do a mini excursion on them at the end of our course.
 
+\section{Integral (I) (1 P)}
+\begin{wrapfigure}{r}{.3\linewidth}
+	\includegraphics[width=\linewidth]{./integral}
+	\caption{Approximation of an integral by area of rectangles.\newline
+		Figure by Jonas Süskind}
+	\vspace{-50pt}
+\end{wrapfigure}
+Write a function \texttt{integrate} that approximates the area underneath a graph of a function $f$, \ie compute the value
+\[ \int_a^b f(x) \;\text{d}x \]
 
-\section{Prime Number Sieve (2\;P)}
-Computing quotients (and hence also the remainder of a division, \ie the modulus) is a relatively costly operation: it takes about ten times longer than an addition (on usual processor architectures). We want to avoid divisions when solving time critical problems.
+The integrand $f$ (\ie the function that gives the graph) should be a parameter to your function \texttt{integrate}. Make it such that your function has the signature:
+\mint{python}{def integrate(func, start, stop, N) :}
 
-The \emph{Sieve of Eratosthenes} (named after Eratosthenes of Kyrene, born in ancient Greece, between 276 and 273 BCE) is an algorithm for finding all prime numbers between 2 and some arbitrary upper boundary $N$ that works \emph{without division/modulus}.
+Use the rectangle approximation:
+\begin{itemize}
+\item Disect the integration interval into $N$ blocks of equal width
+\item For each block, evaluate the function $f$ at the left hand side of your block. This gives the height of the rectangles
+\item Find the areas of all $N$ rectangles and sum them up -- this gives you an approximation of the integral
+\end{itemize}
 
-Implement a function that returns a \inPy{list} of prime numbers using Eratosthenes sieve. To do so, create a list of length $N+1$ and fill it with all integers between $0$ and $N$. Then, eliminate all multiples of 2 from your list (\eg by setting them to 0). Continue by eliminating all multiples of 3, and so on, unless the number in question has already been eliminated. For example, you need not eliminate all multiples of four, since four has been removed when eliminating all multiples of 2. Skip the fours and go on to the fives, and so on.
-
-Make it such that your implementation is a function. The input for the function should be the upper boundary $N$ and the output should be a \inPy{list} of primes.
+You can test your code with the following call:
+\mint{python}{print( integrate(math.exp, 0, 1, 10000) )}
+The output should, approximately, be \texttt{1.718}.
 
 
 \section{Random/Drunk Walk (2 + 3\;P)}

@@ -88,7 +88,11 @@ lastWhitespace = 0
 print("INPUT:")
 print(text)
 
+# ............................................................................ #
+# version 1: character steps
+
 print("OUTPUT:")
+print("." * width)
 for i, char in enumerate(text) :
     if char == ' ' :
         lastWhitespace = i
@@ -102,26 +106,62 @@ for i, char in enumerate(text) :
         print(currentLine[:-lastWord])
 
         currentLine  = currentLine[-lastWord:]
-        currentWidth = 0#currentWidth - lastWord
+        currentWidth = 0
 
 print(currentLine)
 
+# ............................................................................ #
+# version 2: word steps
+
+words = text.split()
+currentWidth = 0
+newLine = False                 # flag: line break directly after the last printed word
+
+print("." * width)
+for word in words :
+    nextWord = len(word)
+
+    # print the word itself
+    if currentWidth + nextWord > width :
+        print()
+        currentWidth = 0
+        newLine = True
+
+    print(word, end="")
+    currentWidth += nextWord
+
+    # print the separating whitespace:
+    if currentWidth + 1 <= width :
+        if newLine :
+            newLine = False
+        else :
+            print(" ", end="")
+            currentWidth += 1
+    else :
+        print()
+print()
+print("." * width)
 
 # ============================================================================ #
 # problem 5
 
-print("### Integral (I)")
+print("ERATOSTHENES PRIME SIEVE")
 
-import math
+N = 10000
 
-def integrate(func, start, stop, N) :
-  result = 0
-  width  = (stop - start) / N
+data = [i for i in range(2, N+1)]
 
-  for i in range(N) :
-    x = start + i * width
-    result += func(x) * width
+for i in data :
+    if i == 0 : continue
 
-  return result
+    for j in range(i+i, N+1, i) :
+        data[j-2] = 0
 
-print( integrate(math.exp, 0, 1, 10000) )
+data = [n for n in data if n != 0]
+
+for i in data :
+    print(i, end=", ")
+
+print("...")
+
+print()

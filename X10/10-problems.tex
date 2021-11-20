@@ -1,0 +1,109 @@
+\documentclass[
+	ngerman,
+	fontsize=10pt,
+	parskip=half,
+	titlepage=true,
+	DIV=12
+]{scrartcl}
+
+\usepackage[utf8]{inputenc}
+\usepackage{babel}
+\usepackage[T1]	{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{color}
+\usepackage{csquotes}
+
+\usepackage{hyperref}
+
+
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage[bf]{caption}
+	\captionsetup{format=plain}
+
+\newcommand*{\tabcrlf}{\\ \hline}
+
+\usepackage{amsmath}
+
+\usepackage{minted}
+	\usemintedstyle{friendly}
+
+\newcommand*{\inPy}[1]{\mintinline{python3}{#1}}
+\newcommand*{\ie}{i.\;e. }
+\newcommand*{\eg}{e.\;g. }
+
+\newcommand{\thus}{\ensuremath{\rightarrow}}
+
+	
+\begin{document}
+
+\part*{Python Problems 10, Winter 2021/22}
+\section{Characters in a file (2\;P)}
+Download the file \texttt{praktische\_Physik.txt}\footnote{original source URL: \url{https://www.familie-ahlers.de/wissenschaftliche_witze/aufgaben_zur_praktischen_physik.html}} from GRIPS and write code that counts the number of characters (with and without line breaks), words and lines in a file. Print your results on screen.
+
+\emph{Hint:}\\
+I get the following results:
+\begin{minted}{text}
+characters total   : 2359
+without line breaks: 2340
+words              : 354
+lines              : 20
+\end{minted}
+
+
+\section{File size with \inPy{tell} and \inPy{seek} (1\;P + 1\;P)}
+Use the methods \inPy{tell} and \inPy{seek}, to find out the length of a file in bytes.
+
+\emph{Optionally,} explain why this code gives two different results:
+\begin{minted}{python3}
+with open("praktische_Physik.txt", "rb") as handle :
+    data = handle.read()
+    text = data.decode(encoding='utf-8')
+
+print("Length in bytes     :", len(data))
+print("Length in characters:", len(text))
+\end{minted}
+
+\section{Total Score (1\;P)}
+Sebi, Simon und Steve have played a game and written their score for every round into a file \texttt{gameScores.txt} (which you'll find on GRIPS). Write a program that reads the scores and puts the totals for each player on screen.
+
+\emph{Hint:}\\
+Using the \texttt{csv} module makes this a bit easier.
+
+\section{Bookmarks (2\;P)}
+Download the file \texttt{bookmarks.json} from GRIPS and read it into memory. From these data, create the following output:
+\begin{minted}{text}
+Coding
+    Python
+        Python 3 Reference
+        -> https://docs.python.org/3/
+        Realpython Tutorials
+        -> https://realpython.com/
+    C/C++
+        CPP Reference
+        -> http://en.cppreference.com/w/
+        Qt5 - Modules
+        -> http://doc.qt.io/qt-5/qtmodules.html
+        Qt5 - Classes
+        -> https://doc.qt.io/qt-5/classes.html
+Uni
+    Physik - Links für Studierende
+    -> https://www.ur.de/physik/fakultaet/studium/links-fuer-studierende/index.html
+    Fachschaft M/PHY
+    -> https://www-app.uni-regensburg.de/Studentisches/FS_MathePhysik/cmsms/
+    Infrastructure
+        GRIPS
+        -> https://elearning.uni-regensburg.de/login/index.php
+        FlexNow
+        -> https://fn2.uni-regensburg.de/FN2AUTH/login.jsp
+        SPUR
+        -> https://studierendenportal.uni-regensburg.de/
+\end{minted}
+
+\emph{Hint}:\\
+I used a recursive function to easily allow for subfolders of subfolders of ...
+
+\emph{Background}:\\
+While not quite in the same format, both Firefox and Google Chrome can export their bookmarks in the JSON format. The file format is commonly used in situations like this where text-data has to be exchanged between programs on different plattforms and internal architecture.
+\end{document}
