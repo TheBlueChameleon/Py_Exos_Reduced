@@ -142,6 +142,9 @@ for word in words :
 print()
 print("." * width)
 
+#asdf asdfas
+# asdfuoin
+
 # ============================================================================ #
 # problem 5
 

@@ -9,6 +9,10 @@ def chainGenerator (*elements, sep="-") :
     result += str(e)
     result += sep
   result += str(elements[-1])       # append the last element explicitly, do not append the separator string
+
+  # or, all in one line:
+  result = sep.join( str(e) for e in elements )
+
   return result
 
 print( chainGenerator(1, 2, 3) )                  # Ausgabe: 1-2-3

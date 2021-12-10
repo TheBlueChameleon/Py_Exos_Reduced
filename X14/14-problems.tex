@@ -1,0 +1,187 @@
+\documentclass[
+	english,
+	fontsize=10pt,
+	parskip=half,
+	titlepage=true,
+	DIV=12
+]{scrartcl}
+
+\usepackage[utf8]{inputenc}
+\usepackage{babel}
+\usepackage[T1]	{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{color}
+\usepackage{csquotes}
+
+\usepackage{hyperref}
+
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage[bf]{caption}
+	\captionsetup{format=plain}
+
+\newcommand*{\tabcrlf}{\\ \hline}
+
+\usepackage{amsmath}
+
+\usepackage{minted}
+	\usemintedstyle{friendly}
+
+\newcommand*{\inPy}[1]{\mintinline{python3}{#1}}
+\newcommand*{\ie}{i.\;e. }
+\newcommand*{\eg}{e.\;g. }
+
+\newcommand{\thus}{\ensuremath{\rightarrow}}
+
+\begin{document}
+
+\part*{Python Problems 14, Winter 2021/22}
+
+\begin{center}
+	\Large
+	\emph{This is the last problem paper in the semester!}
+\end{center}
+
+\section*{Brute Force Linear Optimization (4\;P)}
+You are craving sweets, but cannot spend more than 10\,€ on them. Your local dealer offers aldohexose\footnote{sugar! I swear, this simply means sugar!} containing compounds according to this price list:
+\begin{itemize}
+\item Dark chocolate -- 1.00\,€ per bar
+\item Milk chocolate -- 0.90\,€ per bar
+\item Caramel nuts bars -- 2.30\,€ per packet
+\item Coco cubes -- 1.50\,€ per packet
+\item Mint drops -- 0.30\,€ per bag
+\end{itemize}
+
+Taking package size and taste into account, you assign the following scores:
+\begin{itemize}
+\item Dark chocolate -- 5 points per bar
+\item Milk chocolate -- 4 points per bar
+\item Caramel nuts bars -- 12 points per packet
+\item Coco cubes -- 7 points per packet
+\item Mint drops-- 1 point per bag
+\end{itemize}
+
+Write a program that tells you how to best convert  your money into $C_6H_{12}O_6$, \ie find out which configuration of sweets gives the highest score while still remaining within your budget.
+
+\subsection*{Brute Force Approach}
+In class we've heard (some time ago) that \emph{brute force} approaches (\enquote{trying every possible value}) may not be the fastest solutions; however, the strategy can be used in almost any situation and can be implemented (comparatively) straigt forwardly. To be more precise, a brute force approach can be attempted whenever there is a \emph{finite} number of values to try.
+
+To start with our brute force approach, we'll first have to clarify what \emph{all values} means in our case. If we've got only 10\,€, there's not much sense in computing the score of buying 50 bars of dark chocolate. However, it's also difficult to find all combinations of sweets that are cheaper than 10\,€.
+
+Luckily, we are allowed to do more computations than necessary. As long as we compute all combinations of sweets that we can afford, we can be sure to find the correct solution among all results we've computed.
+
+For brevity / better legibility, I will refer to \enquote{combinations of sweets} as \emph{configuration} from here on.
+
+Convince yourself that, with the given prices, one can find the best solution by trying out $10 \times 11 \times 4 \times 6 \times 33 = 157080$ combinations. How did I find exactly these factors?
+
+Write code that represents the givens (the price- and points list). From this list, compute the numbers 10, 11, 4, ...
+
+\subsection*{Meshgrid}
+As you've just understood, we need all possible combinations of the numbers 0..10, 0..11, 0..4, 0..6 and 0..33. This sounds like a job for a NumPy meshgrid, right?
+
+Since it is very difficult to keep track of the five dimensional tensors that this problem asks for, let's first devellop an algorithm for a simpler case: for the time being, we will only consider dark chocolate and milk chocolate. However, for every line of code, keep in mind that later on you'll want to add other sweets, too. Write code that is flexible enough to allow easily re-activating the other sweets.
+
+Now generate this tensor from the result of the first subrpoblem (reduced to only two kinds of sweets):
+\begin{minted}{text}
+[[[ 0  0  0  0  0  0  0  0  0  0  0  0]
+  [ 1  1  1  1  1  1  1  1  1  1  1  1]
+  [ 2  2  2  2  2  2  2  2  2  2  2  2]
+  [ 3  3  3  3  3  3  3  3  3  3  3  3]
+  [ 4  4  4  4  4  4  4  4  4  4  4  4]
+  [ 5  5  5  5  5  5  5  5  5  5  5  5]
+  [ 6  6  6  6  6  6  6  6  6  6  6  6]
+  [ 7  7  7  7  7  7  7  7  7  7  7  7]
+  [ 8  8  8  8  8  8  8  8  8  8  8  8]
+  [ 9  9  9  9  9  9  9  9  9  9  9  9]
+  [10 10 10 10 10 10 10 10 10 10 10 10]]
+
+ [[ 0  1  2  3  4  5  6  7  8  9 10 11]
+  [ 0  1  2  3  4  5  6  7  8  9 10 11]
+  [ 0  1  2  3  4  5  6  7  8  9 10 11]
+  [ 0  1  2  3  4  5  6  7  8  9 10 11]
+  [ 0  1  2  3  4  5  6  7  8  9 10 11]
+  [ 0  1  2  3  4  5  6  7  8  9 10 11]
+  [ 0  1  2  3  4  5  6  7  8  9 10 11]
+  [ 0  1  2  3  4  5  6  7  8  9 10 11]
+  [ 0  1  2  3  4  5  6  7  8  9 10 11]
+  [ 0  1  2  3  4  5  6  7  8  9 10 11]
+  [ 0  1  2  3  4  5  6  7  8  9 10 11]]]
+\end{minted}
+
+Explain to yourself, what the numbers in this tensor are. Is it clear to you, that the \enquote{coordinates} in the two matrices of this tensor correspond to one configuration?
+
+\emph{Hint}:\\
+The function \texttt{np.indices} does so in a particularly simple way. However, you can also use \texttt{np.meshgrid} to achieve this result.
+
+
+\subsection*{Finding Total Prices and Points}
+Now use the tensors you've constructed in the last sub-problem to find the total price and total score for each configuration.\\
+(I named the variables storing these information \texttt{total\_prices} and \texttt{total\_points}. These names will be referred to later on in the problem statement. Of course, you can use any name you like for your variables.)
+
+\emph{Hint}:\\
+If you want to solve this in a particularly fancy manner, you can look up \texttt{np.tensordot} online, to get total price and score in one line each. Another way is the function \texttt{np.dot}. However, it is easiest to do this with a normal \texttt{for} loop.
+
+
+\subsection*{Filtering Too Expensive Configurations}
+Buying 10 bars of dark chocolate and 11 bars of milk chocolate costs 19.90\,€, \ie more than our budget allows. Find all configurations that are too expensive, and set the total score of these configurations to \texttt{-1}.
+
+\emph{Hint}:\\
+You can do this with a single line of code.
+
+
+\subsection*{Finding The Best Configuration}
+The function \texttt{np.max(A)} finds the biggest value in an \texttt{np.ndarray A}. This also works for matrices and higher dimensional objects.
+
+Similarly, the function \texttt{np.argmax(A)} finds not the biggest value itself, but \emph{where} that value can be found. Unfortunately, the answer will always be an \inPy{int}eger, no matter how many dimensions \texttt{A} has. This is because matrices and higher dimensional objects are \emph{vectorized}, \ie in memory, they are simply a long, one-dimensional list. For example, the matrix
+\[ A = \begin{pmatrix}
+	1 & 5 \\
+	7 & 2
+\end{pmatrix} \]
+will be found in memory as the list of values \texttt{1, 5, 7, 2}. In this list, \texttt{np.argmax} finds the biggest value (7) at index 2.
+
+Fortunately, this \enquote{flattened index} can be translated back into a row- and column-index by the function \texttt{np.unravel\_index}. It takes the \inPy{int}eger to translate back and a \inPy{tuple} specifying the size of the matrix as arguments and returns a \inPy{tuple} with the multi-dimensional coordinates the \inPy{int}eger represents. For example, \inPy{np.unravel_index(3, (2, 2))} gives you \inPy{(1, 0)} (which is where we find the 7 in the matrix $A$).
+
+Now use \texttt{np.argmax} and \texttt{np.unravel\_index} to find out, which of the configurations scored highest. Convince yourself that you did right by reproducing the result of \texttt{np.max(total\_points)} with the return value of \texttt{np.unravel\_index}.
+
+\subsection*{Results}
+Plug everything together to find results like these:
+\begin{minted}{text}
+SWEET                | QUANTITY | PRICE | SCORE
+---------------------+----------+-------+-------
+dark chocolate       |        3 |  3.00 |    15
+milk chocolate       |        0 |  0.00 |     0
+caramel nuts bar     |        3 |  6.90 |    36
+coco cube            |        0 |  0.00 |     0
+mint drops bag       |        0 |  0.00 |     0
+---------------------+----------+-------+-------
+TOTAL                |        6 |  9.90 |  51.0
+Analyzed 157080 combinations in  6.77 ms.
+\end{minted}
+
+To check for a common bug, change the points for coco cubes to 8; you should now find these numbers:
+\begin{minted}{text}
+SWEET                | QUANTITY | PRICE | SCORE
+---------------------+----------+-------+-------
+dark chocolate       |        1 |  1.00 |     5
+milk chocolate       |        0 |  0.00 |     0
+caramel nuts bar     |        0 |  0.00 |     0
+coco cube            |        6 |  9.00 |    48
+mint drops bag       |        0 |  0.00 |     0
+---------------------+----------+-------+-------
+TOTAL                |        7 | 10.00 |  53.0
+Analyzed 157080 combinations in  6.61 ms.
+\end{minted}
+
+
+\subsection*{Congratulations!}
+You have now solved a five-dimensional optimization problem! Sounds fancy, right?
+
+
+\subsection*{Background}
+Problems of this kind are found frequently in real life. As mentioned in the beginning, our brute force approach works, but becomes impractical quickly. As you can see, for this little problem we already analyzed 157\,080 configurations; for any sweet included in our analysis, the effort increases roughly by a factor of 10\footnote{or better: by $\frac{\text{money}}{\text{average price of all sweets}}$}. We say, the problem has \emph{exponential time complexity in its number of components}. If we are willing to spend more money, we need to consider more possibilities \emph{for each sweet}, giving us \emph{exponential complexity in money}, too. Running the above code for 30\,€ already takes some 2 seconds on my computer. At 33\,€ it's already 10 seconds.
+
+Worse are the memory requirements: the 48\,175\,110 combinations that can be formed with 33\,€ take several gigabytes of memory.
+
+Better approaches involve abstract maths which I cannot show you here. (In fact, I've taken the class \emph{Méthodes d'optimisation linéare} at the Université de Montpellier ... where I understood next to nothing). For small problems, however, you can easily adapt the solution you just found to solve new problems you might encounter. The power of Python is yours to use!
+\end{document}

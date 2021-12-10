@@ -99,7 +99,7 @@ def showHistogram(histogram) :
 
 # driver code
 runs   = 500            # how often to send the drunkard down the road
-N      = 20             # how many steps to take
+N      = 21             # how many steps to take
 B      = 10             # width of the road
 pLeft  = 0.5            # bias to the left (go left 100% of the time --> 1)
 
