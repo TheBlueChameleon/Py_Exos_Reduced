@@ -64,7 +64,7 @@ def get_smooth_curve (pts_through, pts_via) :
             # use the subsequent via point
             x, y = pts_via[section_id + 1]
 
-        C = pts_via    [section_id    ]
+        C = pts_via[section_id]
         D = (x, y)
 
         func = bezier(A, B, C, D)

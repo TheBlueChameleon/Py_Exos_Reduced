@@ -54,8 +54,8 @@ class Player :
 
     def __str__ (self) :
         reVal = "PLAYER:\n"
-        reVal += "\tname                : " + self.name                 + "\n"
-        reVal += "\tsteps toward success: " + str(self.progress)        + "\n"
+        reVal += "\tname                : " + self.name          + "\n"
+        reVal += "\tsteps toward success: " + str(self.progress) + "\n"
 
         for characteristic, value in self.characteristics.items() :
             reVal += f"\t{characteristic:20}: {value}\n"
@@ -439,8 +439,13 @@ track_length = 2
 winners = []
 while len(winners) == 0 :
     for player in players :
-        peril = random.choice(perils)
-        player.face_peril(peril)
+        if player.skip_turns :
+            print(f"{player.name} skips a turn.")
+            player.skip_turns -= 1
+        else :
+            peril = random.choice(perils)
+            player.face_peril(peril)
+
     winners = get_winnners(players, track_length)
 
 if len(winners) == 1 :

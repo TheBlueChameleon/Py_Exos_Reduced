@@ -76,15 +76,15 @@ func = lambda x : x + 1
 
 # iterative version:
 def nFold_iterative(f, N, x) :
-  arg = x
-  for i in range(N) :
-    arg = f(arg)
-  return arg
+    arg = x
+    for i in range(N) :
+        arg = f(arg)
+    return arg
 
 # recursive version:
 def nFold(f, N, x) :
-  if N == 0 : return x
-  else      : return f(nFold(f, N-1, x))
+    if N == 0 : return x
+    else      : return f(nFold(f, N-1, x))
 
 print( nFold          (func, 3, 0) )
 print( nFold_iterative(func, 3, 0) )
@@ -119,102 +119,102 @@ import random
 # ---------------------------------------------------------------------------- #
 
 def makeSocksList(P) :
-  # argument P is the number of *pairs*, i.e. number of socks N = 2*P.
+    # argument P is the number of *pairs*, i.e. number of socks N = 2*P.
 
-  reVal = []
-  for i in range(P) :
-    reVal += [i, i]                 # also viable here: [chr(i + 65), chr(i + 65)]    # chr(a): create a character with ASCII code a
+    reVal = []
+    for i in range(P) :
+        reVal += [i, i]                 # also viable here: [chr(i + 65), chr(i + 65)]    # chr(a): create a character with ASCII code a
 
-  random.shuffle(reVal)
+    random.shuffle(reVal)
 
-  return reVal
+    return reVal
 
 # ---------------------------------------------------------------------------- #
 # simple algorithm, taking (on average) N * (N-1) / 4 steps
 
 def directApproach(socks) :
-  N = len(socks)
-  reVal = [-1] * N              # Initialize with "meaningless" value -1 as code for "partner not yet found".
-                                # This allows to later easily see whether our algorithm works or whether it skips socks.
-  comparisons = 0               # Count, how many comparison steps are necessary -- only for comparing to the other approach
+    N = len(socks)
+    reVal = [-1] * N                    # Initialize with "meaningless" value -1 as code for "partner not yet found".
+                                        # This allows to later easily see whether our algorithm works or whether it skips socks.
+    comparisons = 0                     # Count, how many comparison steps are necessary -- only for comparing to the other approach
 
-  for   i in range(N - 1) :     # Sequentially, take each sock in the heap except for the last one in the "left hand"...
-    for j in range(i + 1, N) :  # ... and, aequentially, take all socks in the "right hand" that weren't in the "left hand" before
-      comparisons += 1
-      if socks[i] == socks[j] : # compare left hand (index i) and right hand (index j)
-        reVal[i] = j
-        reVal[j] = i
-        break                   # save some time: if a sock and their partner have been found, the search needs not to be continued.
+    for   i in range(N - 1) :           # Sequentially, take each sock in the heap except for the last one in the "left hand"...
+        for j in range(i + 1, N) :      # ... and, aequentially, take all socks in the "right hand" that weren't in the "left hand" before
+            comparisons += 1
+            if socks[i] == socks[j] :   # compare left hand (index i) and right hand (index j)
+                reVal[i] = j
+                reVal[j] = i
+                break                   # save some time: if a sock and their partner have been found, the search needs not to be continued.
 
-  return reVal, comparisons
+    return reVal, comparisons
 
 # ---------------------------------------------------------------------------- #
 # advanced recursive approach
 
 def recursiveApproach(socks) :
-  # outer function only gives a more convenient interface: only socks go in
+    # outer function only gives a more convenient interface: only socks go in
 
-  if len(socks) % 2 :         # if number of socks is odd
-    raise Exception("Cannot form pairs!")
+    if len(socks) % 2 :         # if number of socks is odd
+        raise ValueError("Cannot form pairs!")
 
-  comparisons = 0             # again: count comparisons for efficiency analysis
+    comparisons = 0             # again: count comparisons for efficiency analysis
 
-  # The inner function does the true work. For the end user there are
-  # superfluous parameters start and length which are thus hidden.
+    # The inner function does the true work. For the end user there are
+    # superfluous parameters start and length which are thus hidden.
 
-  # Compare socks in the sub-heaps with indices [start : start + length]
+    # Compare socks in the sub-heaps with indices [start : start + length]
 
-  def matchSocksRecursive(socks, start, length) :
-    nonlocal comparisons      # use the variable defined in the outer function
+    def matchSocksRecursive(socks, start, length) :
+        nonlocal comparisons      # use the variable defined in the outer function
                               # rather than have it local to the inner function
 
-    matches = [-1] * length
+        matches = [-1] * length
 
-    # are there only two socks? Compare them immediately
-    if length == 2 :
-      comparisons += 1
-      if socks[start] == socks[start + 1] :
-        return [start + 1,  start]
+        # are there only two socks? Compare them immediately
+        if length == 2 :
+            comparisons += 1
+            if socks[start] == socks[start + 1] :
+                return [start + 1,  start]
 
-      else :
-        return [-1, -1]         # negative indices indicate: socks were not matched (yet)
+            else :
+                return [-1, -1]         # negative indices indicate: socks were not matched (yet)
 
-    elif length == 1 :          # only one sock -- no comparison possible
-      return [-1]
+        elif length == 1 :              # only one sock -- no comparison possible
+            return [-1]
 
-    # from here on it is clear that the heap of socks is bigger than two.
+        # from here on it is clear that the heap of socks is bigger than two.
 
-    # split the heap into a left and right half
-    lengthLeft  = length // 2
-    lengthRight = length - lengthLeft
-    midPoint    = start + lengthLeft
+        # split the heap into a left and right half
+        lengthLeft  = length // 2
+        lengthRight = length - lengthLeft
+        midPoint    = start + lengthLeft
 
-    # Recursion: think not only of the code above, but also keep track of what
-    # is written below this.
-    # We assume that matchRecursive returns a list of numbers. These lists are
-    # exactly as long as indicated by the third aprameter, length.
-    # The numbers are either non-negative (if a match could be found in the
-    # sub-heap [start : start + length]) or -1 if no match has been found yet.
-    # We now need to find the counterpart of the unmatched socks in the left
-    # heap amongst the unmatched socks in the right heap.
+        # Recursion: think not only of the code above, but also keep track of what
+        # is written below this.
+        # We assume that matchRecursive returns a list of numbers. These lists are
+        # exactly as long as indicated by the third aprameter, length.
+        # The numbers are either non-negative (if a match could be found in the
+        # sub-heap [start : start + length]) or -1 if no match has been found yet.
+        # We now need to find the counterpart of the unmatched socks in the left
+        # heap amongst the unmatched socks in the right heap.
 
-    matchesLeft  = matchSocksRecursive(socks, start   , lengthLeft )
-    matchesRight = matchSocksRecursive(socks, midPoint, lengthRight)
+        matchesLeft  = matchSocksRecursive(socks, start   , lengthLeft )
+        matchesRight = matchSocksRecursive(socks, midPoint, lengthRight)
 
-    for i, match in enumerate(matchesLeft) :
-      if match >= 0 : continue          # sock has been matched before -- skip
+        for i, match in enumerate(matchesLeft) :
+            if match >= 0 : continue          # sock has been matched before -- skip
 
-      for j, candidate in enumerate(matchesRight) :
-        if candidate >= 0 : continue    # same idea again
+            for j, candidate in enumerate(matchesRight) :
+                if candidate >= 0 : continue    # same idea again
 
-        comparisons += 1
-        if socks[start + i] == socks[midPoint + j] :
-          matchesLeft [i] = midPoint + j
-          matchesRight[j] = start    + i
+                comparisons += 1
+                if socks[start + i] == socks[midPoint + j] :
+                    matchesLeft [i] = midPoint + j
+                    matchesRight[j] = start    + i
 
-    return matchesLeft + matchesRight
+        return matchesLeft + matchesRight
 
-  return matchSocksRecursive(socks, 0, len(socks)), comparisons
+    return matchSocksRecursive(socks, 0, len(socks)), comparisons
 
 
 # ---------------------------------------------------------------------------- #

@@ -69,7 +69,7 @@ print("Length in bytes     :", len(data))                                       
 print("Length in characters:", len(text))                                       # length of the text in bytes
 print()
 
-# Character Encodings (UTF-8, ASCII, ANSI, ...)
+# Character Encodings (UTF-8, ASCII, ANSI, ...):
 # For the computer, letters are just numbers, as we know.
 # However, there's different ways of putting numbers on a disk.
 # One could use one byte per character, to the effect of having at most 256
@@ -132,7 +132,7 @@ with open("gameScores.txt") as handle :
     reader = csv.reader(handle)
 
     names = next(reader)
-        # the fucntion next hasn't been covered yet.
+        # the function next hasn't been covered yet.
         # next takes an iterable (i.e. an object that can be iterated over with
         # for), and returns the next element in the container.
         # Not every iterable can be accessed with indices, e.g.
@@ -148,6 +148,16 @@ with open("gameScores.txt") as handle :
     for line in reader :
         for i, points in enumerate(line) :
             scores[names[i]] += int(points)
+
+    # of course you could do all of that without knowing the function next.
+    # one way of doing so would be
+
+    # for i, line in enumerate(reader) :
+    #    if i == 0 :
+    #        scores = {name : 0 for name in line}
+    #    else :
+    #        for j, points in enumerate(line) :
+    #            scores[names[j]] += int(points)
 
 for name, score in scores.items() :
     print(f"{name:5}: {score} Punkte")

@@ -27,7 +27,7 @@ index = [-1] * n
 matches = [None] * n * 2
 
 for i, sock in enumerate(socks):
-    if (index[sock] < 0):
+    if (index[sock] < 0) :
         index[sock] = i
     else:
         matches[i] = index[sock]
