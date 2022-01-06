@@ -1,6 +1,6 @@
 import random
 
-test_mode = False
+test_mode = True
 
 # ============================================================================ #
 
@@ -39,11 +39,19 @@ class Player :
         self.name = name
 
         self.characteristics = dict()
-        self.characteristics["health"]       = Player.base_health       + random.randint(-Player.fluctuation_health      , +Player.fluctuation_health)
-        self.characteristics["strength"]     = Player.base_strength     + random.randint(-Player.fluctuation_strength    , +Player.fluctuation_strength)
-        self.characteristics["intelligence"] = Player.base_intelligence + random.randint(-Player.fluctuation_intelligence, +Player.fluctuation_intelligence)
-        self.characteristics["speed"]        = Player.base_speed        + random.randint(-Player.fluctuation_speed       , +Player.fluctuation_speed)
-        self.characteristics["charisma"]     = Player.base_charisma     + random.randint(-Player.fluctuation_charisma    , +Player.fluctuation_charisma)
+
+        attributes = [                                      # A list of strings, containing "health", "strength", ..., generated from ...
+            base[ base.index('_') + 1 : ]                   # everyting after the first underscore in base, where base is ...
+            for base in (                                   # a string that starts with 'base' that is a class attribute of class Player.
+                x for x in Player.__dict__                  # almost all objects have a dunder __dict__, which lists all *instance* attributes.
+                if type(x) == str and x.startswith('base')  # classes are objects, too, and their *instance* attriubes are the *class* attributes of their instances.
+            )
+        ]
+
+        for attr in attributes :
+            base  = Player.__dict__["base_"        + attr]
+            fluct = Player.__dict__["fluctuation_" + attr]
+            self.characteristics[attr] = base + random.randint(-fluct, +fluct)
 
         self.backpack = []
 
@@ -57,15 +65,10 @@ class Player :
         reVal += "\tname                : " + self.name          + "\n"
         reVal += "\tsteps toward success: " + str(self.progress) + "\n"
 
-        for characteristic, value in self.characteristics.items() :
-            reVal += f"\t{characteristic:20}: {value}\n"
+        reVal += "".join( f"\t{characteristic:20}: {value}\n" for characteristic, value in self.characteristics.items() )
 
         reVal += "\tin their backpack:\n"
-        if len(self.backpack) :
-            for item in self.backpack :
-                reVal += "\t* " + str(item) + "\n"
-        else :
-            reVal += "\t(nothing)\n"
+        reVal += "".join( "\t* " + str(item) + "\n" for item in self.backpack ) if self.backpack else "\t(nothing)\n"
 
         return reVal
 
@@ -73,18 +76,7 @@ class Player :
 
     def add_item (self, item) :
         if not item.consumable :
-            if item in self.backpack :
-                # note: this 'if' only works since in this version, since we literally try to add the same item from the module level list items.
-                # if we would construct a second Item("Bullwhip", "charisma", 3 False), this would be in a different position in memory and hence
-                # count as a different object of the 'in' operator.
-                # You can still mitigate this by explicitly comparing the instance attributes:
-                # found = False
-                # for old_item in self.backpack :
-                #     if item.name == old_item.name :
-                #         found = True
-                # if found :
-                #    ...
-
+            if any(item.name == backpackitem.name for backpackitem in self.backpack) :
                 print(f"This permanent item '{item.name}' is already in your backpack")
                 return
 
@@ -97,10 +89,8 @@ class Player :
 
             slot_id = int(input("Please enter the number of the item to discard now: "))
 
-            if slot_id == self.backpack_limit :
-                return
-            else :
-                self.backpack[slot_id] = item
+            if slot_id >= self.backpack_limit : return
+            else                              : self.backpack[slot_id] = item
 
             return
 
@@ -109,13 +99,8 @@ class Player :
     # ........................................................................ #
 
     def get (self, characteristic) :
-        result = self.characteristics[characteristic]
-
-        for item in self.get_permanent_items().values() :
-            if item.characteristic == characteristic :
-                result += item.magnitude
-
-        return result
+        return self.characteristics[characteristic] + \
+            sum(item.magnitude for item in self.get_permanent_items().values() if item.characteristic == characteristic)
 
     # ........................................................................ #
 
@@ -135,7 +120,7 @@ class Player :
         # .................................................................... #
 
         while True :
-            answer = input("").upper()
+            answer = input("").strip().upper()
 
             if answer == "YES" :
                 task = peril.task_yes
@@ -151,7 +136,7 @@ class Player :
         # .................................................................... #
 
         print(task.text)
-        print(f"Requirement: {task.characteristic}. Cost = {task.cost}")
+        print(f"Requirement: {task.characteristic}. Cost: {task.cost}")
 
         if task.characteristic == "skip turn" :
             self.skip_turns = task.cost
@@ -179,8 +164,9 @@ class Player :
                     print("invalid option")
                     continue
 
-                number_of_dice += self.backpack[answer].magnitude * (self.backpack[answer].characteristic == task.characteristic)
-                self.backpack.pop(answer)
+                used_item = self.backpack.pop(answer)
+                number_of_dice += used_item.magnitude * (used_item.characteristic == task.characteristic)
+
                 consumables = self.get_consumable_items()
 
         print(f"You may use {number_of_dice} dice.")
@@ -240,11 +226,11 @@ def task_passed (number_of_dice, cost) :
     last_roll = 1
 
     while last_roll :
-        roll = [random.randint(1, 6) for i in range(number_of_dice)]
-        last_roll = roll.count(5) + roll.count(6)
+        dice = [random.randint(1, 6) for i in range(number_of_dice)]
+        last_roll = sum(1 for die in dice if die >= 5)
         success += last_roll
 
-        print("You rolled:", roll, "=> number of successes:", last_roll, "=> total success:", success)
+        print("You rolled:", dice, "=> number of successes:", last_roll, "=> total success:", success)
 
         if success >= cost : return True
 
@@ -253,12 +239,7 @@ def task_passed (number_of_dice, cost) :
 # ============================================================================ #
 
 def get_winnners (players, max_rounds) :
-    result = []
-    for p in players :
-        if p.progress >= max_rounds :
-            result.append(p)
-
-    return result
+    return [p for p in players if p.progress >= max_rounds]
 
 # ============================================================================ #
 # test codes
@@ -316,13 +297,14 @@ if test_mode :
 
     player = Player("Dusky Joe")
 
-    print( player.get("strength") )
+    print( f"{'plain strength (no items)':30}", player.get("strength") )
 
     player.add_item( items[0] )
     player.add_item( items[1] )
     player.add_item( items[2] )
 
-    print( player.get("strength") )
+    print( f"{'strength with items':30}", player.get("strength") )
+    print()
 
     # ........................................................................ #
     print("Peril and Task test")
@@ -386,19 +368,24 @@ perils = [
           "up and a deep gorge stands between you and the temple. There is a narrow " + \
           "and shaky suspension bridge over the gorge.\n" + \
           "Do you step on the bridge?",
-          Task("speed", 16, 3,
-               "Half way over the bridge, you hear the hissing sound of ropes " + \
-               "disintegrating: one of the ropes holding the bridge is about to snap!\n" + \
-               "Run for your life!",
-               "You dash forward as fast as you can. By a hair's breadth you make it to " + \
-               "the other side before the bridge collapses. You are safe... for now...",
-               "In spite of your best effort you cannot make it to the other side before " + \
-               "the bridge collapses. You fall down into the water. The fall hurts a lot."
+          Task(characteristic = "speed",
+               cost = 16,
+               penalty = 3,
+               text = "Half way over the bridge, you hear the hissing sound of ropes " + \
+                   "disintegrating: one of the ropes holding the bridge is about to snap!\n" + \
+                   "Run for your life!",
+               text_pass = "You dash forward as fast as you can. By a hair's breadth you make it to " + \
+                   "the other side before the bridge collapses. You are safe... for now...",
+               text_fail = "In spite of your best effort you cannot make it to the other side before " + \
+                   "the bridge collapses. You fall down into the water. The fall hurts a lot."
           ),
-          Task("skip turn", 1, 0,
-               "You try to find another way across the gorge, which takes a lot of time.\n" + \
-               "Skip one turn.",
-               "", ""
+          Task(characteristic = "skip turn",
+               cost = 1,
+               penalty = 0,
+               text = "You try to find another way across the gorge, which takes a lot of time.\n" + \
+                   "Skip one turn.",
+               text_pass = "",
+               text_fail = ""
           )
     ),
 
@@ -420,17 +407,21 @@ perils = [
 
     Peril("An avalanche of pebbles has gone down, and now a boulder blocks your way.\n" + \
           "Will you try to thrust away the boulder (yes) or can you think of something more sophisticated (no)?",
-          Task("strength", 20, 1,
-               "You roll up the sleeves of your shirt and push against the boulder. Are you strong enough?",
-               "Going to the gym finally pays off! With a mighty thrust, the obstacle is removed!",
-               "No way, it's not moving. You exhaust yourself before looking for another way forward..."
+          Task(characteristic = "strength",
+               cost = 20,
+               penalty = 1,
+               text = "You roll up the sleeves of your shirt and push against the boulder. Are you strong enough?",
+               text_pass = "Going to the gym finally pays off! With a mighty thrust, the obstacle is removed!",
+               text_fail = "No way, it's not moving. You exhaust yourself before looking for another way forward..."
           ),
-          Task("intelligence", 20, 3,
-               "You try to remember all the episodes of MacGyver you've ever seen. Can you remember a good trick?",
-               "You remember how to generate hydrogen gas from salty water and scrap metal and use that to build a makeshift mini bomb.\n" + \
-               "It shatters the bouler and frees the path for you.",
-               "You do remember how to get hydrogen from salty water and scrap metal, but not how easily hydrogen gas explodes.\n" +
-               "In the detonation, shards of your metal deposit fly around and cut into your flesh, but the boulder does not move a bit."
+          Task(characteristic = "intelligence",
+               cost = 20,
+               penalty = 3,
+               text = "You try to remember all the episodes of MacGyver you've ever seen. Can you remember a good trick?",
+               text_pass = "You remember how to generate hydrogen gas from salty water and scrap metal and use that to build a makeshift mini bomb.\n" + \
+                   "It shatters the bouler and frees the path for you.",
+               text_fail = "You do remember how to get hydrogen from salty water and scrap metal, but not how easily hydrogen gas explodes.\n" + \
+                   "In the detonation, shards of your metal deposit fly around and cut into your flesh, but the boulder does not move a bit."
                )
     )
 ]
@@ -451,7 +442,6 @@ while len(winners) == 0 :
 if len(winners) == 1 :
     print( winners[0].name, "wins the game!" )
 else :
-    for player in winners[:-1] :
-        print(player.name, ", ", sep="", end="")
+    print( ", ".join(winners[:-1]) )
     print("and", winners[-1], "all arrive at the central artefact at the same time!")
     print("they all win!")
