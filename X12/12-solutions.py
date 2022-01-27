@@ -20,7 +20,7 @@ with open("bakeries.csv", "r") as hFile :
 
 X, Y, S, C = tuple(zip(*allData))
 
-plt.scatter(X, Y, S, C)
+plt.scatter(X, Y, S, C, cmap="summer")
 plt.title("Bakery Sales in Town")
 plt.xlabel(heads[0])
 plt.ylabel(heads[1])
